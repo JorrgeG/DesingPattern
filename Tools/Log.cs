@@ -8,12 +8,19 @@ namespace Tools
     {
         private static Log _instance = null;
         private string _path;
+        //Para poder evitar que se cree una instancia null cuando trabajanos con hilos, usamos lo siguiente
+        private static object _protect = new object();
 
         public static Log GetInstance(string path)
         {
-            if (_instance == null)
+            //la palabra reservada lock(), va a evitar que otro hilo trabaje en el fujo mientras el hilo actual este en el.
+            //va a dejar el siguiente hilo en espera, mientras termina el hilo actual.
+            lock (_protect)
             {
-                _instance = new Log(path);
+                if (_instance == null)
+                {
+                    _instance = new Log(path);
+                }
             }
             return _instance;
         }
