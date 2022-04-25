@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesingPattern.FactoryMethod;
+using System;
 
 namespace DesingPattern
 {
@@ -6,8 +7,10 @@ namespace DesingPattern
     {
         static void Main(string[] args)
         {
-            var log = Singleton.Log.Instance;
-            log.Save("a");
+            Factory factory = new StoreSaleFactory(10);
+
+            ISale sale1 = factory.GetSale();
+            sale1.Sell(15); 
         }
     }
 }

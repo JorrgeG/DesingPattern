@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesingPattern.FactoryMethod
+{
+    //Creator
+    public abstract class Factory
+    {
+        public abstract ISale GetSale();
+    }
+
+    //Concrete Creator
+    public class StoreSaleFactory : Factory
+    {
+        private decimal _extra;
+
+        public StoreSaleFactory(decimal extra)
+        {
+            _extra = extra;
+        }
+        public override ISale GetSale()
+        {
+            return new StoreSale(_extra);
+        }
+    }
+
+
+    //Concrete Product
+    public class StoreSale : ISale
+    {
+        private decimal _extra;
+
+        public StoreSale(decimal extra)
+        {
+            _extra = extra;
+        }
+
+        public void Sell(decimal total)
+        {
+            Console.WriteLine($"La venta tiene un total de: {total + _extra}");
+        }
+    }
+
+    //Product
+    public interface ISale
+    {
+        public void Sell(decimal total);
+    }
+}
