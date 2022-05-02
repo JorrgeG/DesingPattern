@@ -9,14 +9,21 @@ namespace DesingPattermsAsp.Controllers
 {
     public class ProductDetailController : Controller
     {
+        private EarnFactory _localEarnFactory;
+
+        public ProductDetailController(LocalEarnFactory localEarnFactory)
+        {
+            _localEarnFactory = localEarnFactory;
+        }
+
         public IActionResult Index(decimal total)
         {
             //factories
-            LocalEarnFactory localEarnFactory = new LocalEarnFactory(0.20m);
+            //LocalEarnFactory localEarnFactory = new LocalEarnFactory(0.20m);  Ya no es necesario tener la resposabilidad, ya que con Inyeccion de Dependencia lo hace
             ForeignEarnFactory foreignEarnFactory = new ForeignEarnFactory(0.30m, 20m);
 
             //products
-            var localEarn = localEarnFactory.GetEarn();
+            var localEarn = _localEarnFactory.GetEarn();
             var foreignEarn = foreignEarnFactory.GetEarn();
 
             //Total

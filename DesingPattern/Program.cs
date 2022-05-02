@@ -1,5 +1,7 @@
 ﻿using DesingPattern.FactoryMethod;
+using DesingPattern.Models;
 using System;
+using System.Linq;
 
 namespace DesingPattern
 {
@@ -7,10 +9,13 @@ namespace DesingPattern
     {
         static void Main(string[] args)
         {
-            Factory factory = new StoreSaleFactory(10);
+            using var context = new DesignPatternsContext();
+            var lst = context.Beers.ToList();
 
-            ISale sale1 = factory.GetSale();
-            sale1.Sell(15); 
+            foreach(var beer in lst)
+            {
+                Console.WriteLine(beer.Name);
+            }
         }
     }
 }

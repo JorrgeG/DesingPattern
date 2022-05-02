@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tools.Earn;
 
 namespace DesingPattermsAsp
 {
@@ -26,6 +27,9 @@ namespace DesingPattermsAsp
         {
             services.AddControllersWithViews();
             services.Configure<MyConfig>(Configuration.GetSection("MyConfig")); //inyeccion de dependencias - patron
+            services.AddTransient((factory) => {
+                return new LocalEarnFactory(0.20m);
+            }); //metodo transitorio de Inyeccion de Dependecias
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
