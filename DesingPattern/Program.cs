@@ -1,5 +1,6 @@
 ﻿using DesingPattern.FactoryMethod;
 using DesingPattern.Models;
+using DesingPattern.RepositoryPattern;
 using System;
 using System.Linq;
 
@@ -10,11 +11,17 @@ namespace DesingPattern
         static void Main(string[] args)
         {
             using var context = new DesignPatternsContext();
-            var lst = context.Beers.ToList();
+            var beerRepository = new BeerRepository(context);
+            var beer = new Beer();
+            beer.Style = "Pilsner";
+            beer.Name = "Corona";
 
-            foreach(var beer in lst)
+            beerRepository.Add(beer);
+            beerRepository.Save();
+
+            foreach (var item in beerRepository.Get())
             {
-                Console.WriteLine(beer.Name);
+                Console.WriteLine(item.Name);
             }
         }
     }
