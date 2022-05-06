@@ -35,26 +35,28 @@ namespace DesignPatterns.Models.Data
 
             modelBuilder.Entity<Beer>(entity =>
             {
-                entity.ToTable("Beer");
-
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Style)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Brand)
+                    .WithMany(p => p.Beers)
+                    .HasForeignKey(d => d.BrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Beers__BrandId__2A4B4B5E");
             });
 
             modelBuilder.Entity<Brand>(entity =>
             {
-                entity.HasKey(e => e.BradId);
+                entity.Property(e => e.BrandId).HasDefaultValueSql("(newid())");
 
-                entity.ToTable("Brand");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);
