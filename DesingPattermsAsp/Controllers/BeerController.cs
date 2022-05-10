@@ -1,6 +1,7 @@
 ﻿using DesignPatterns.Models.Data;
 using DesignPatterns.Repository;
 using DesingPattermsAsp.Models.ViewModels;
+using DesingPattermsAsp.Strategy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -34,8 +35,7 @@ namespace DesingPattermsAsp.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            var brands = _unitOfWork.Brands.Get();
-            ViewBag.Brands = new SelectList(brands, "BrandId", "Name");
+            GetBrandsData();
             return View();
         }
 
@@ -44,31 +44,24 @@ namespace DesingPattermsAsp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var brands = _unitOfWork.Brands.Get();
-                ViewBag.Brands = new SelectList(brands, "BrandId", "Name");
+                GetBrandsData();
                 return View("Add", formView);
             }
 
-            var beer = new Beer();
-            beer.Name = formView.Name;
-            beer.Style = formView.Style;
+            var context = formView.BrandId == null 
+                ? new BeerContext(new BeerWithBrandStrategy()) 
+                : new BeerContext(new BeerStrategy());
 
-            if (formView.BrandId == null)
-            {
-                var brand = new Brand();
-                brand.Name = formView.OtherBrand;
-                brand.BrandId = Guid.NewGuid();
-                beer.BrandId = brand.BrandId;
-                _unitOfWork.Brands.Add(brand);
-            }
-            else
-            {
-                beer.BrandId = (Guid)formView.BrandId;
-            }
-
-            _unitOfWork.Beers.Add(beer);
-            _unitOfWork.Save();
+            context.Add(formView, _unitOfWork);
             return RedirectToAction("Index");
         }
+
+        #region HELPERS
+        private void GetBrandsData()
+        {
+            var brands = _unitOfWork.Brands.Get();
+            ViewBag.Brands = new SelectList(brands, "BrandId", "Name");
+        }
+        #endregion
     }
 }
