@@ -1,4 +1,5 @@
-﻿using DesingPattern.FactoryMethod;
+﻿using DesingPattern.BuilderPattern;
+using DesingPattern.FactoryMethod;
 using DesingPattern.Models;
 using DesingPattern.RepositoryPattern;
 using DesingPattern.StrategyPattern;
@@ -12,17 +13,13 @@ namespace DesingPattern
     {
         static void Main(string[] args)
         {
-            // principios SOLID:
-            // 1- Abierto y cerrado: nos dice que una clase deberia estar abierta a extencion pero cerrada a modificacion.
-            // 2- Responsabilidad unica: nose como se le da el comportamiento al objeto, pero seguira corriendo, en este ejemplo
+            var builder = new PreparedAlcoholicDrinkConcreteBuilder();
+            var barmanDirector = new BarbanDirector(builder);
 
+            barmanDirector.PrepareMargarita();
 
-
-            var context = new Context(new CarStrategy());
-            context.Run();
-
-            context.Strategy = new MotorcyleStrategy();
-            context.Run();
+            var preparedDrink = builder.GetPrepareDrink();
+            Console.WriteLine(preparedDrink.Result);
         }
     }
 }
